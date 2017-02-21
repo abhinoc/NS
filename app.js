@@ -10,10 +10,12 @@ var clients = 0;
 
 io.on('connection', function(socket){
     clients++;
-  io.sockets.emit('broadcast', { description: clients + ' clients connected!'});
+  io.sockets.emit('broadcast',{ description: clients + ' clients connected!'});
+  socket.emit('newclientconnect', { description: 'Hey, welcome!'});
+  socket.broadcast.emit('newclientconnect' ,{ decription: clients + ' clients connected!'}) 
   socket.on('disconnect', function () {
                clients--;
-                  io.sockets.emit('broadcast', { description: clients + ' clients connected!'});
+                  socket.broadcast.emit('newclientconnect', { description: clients + ' clients connected!'});
                });
 });
 
