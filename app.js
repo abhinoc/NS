@@ -6,22 +6,15 @@ app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');
 });
 
-io.on('connection', function(socket){
-  console.log('A user connected');
+var clients = 0;
 
-  //Send a message after a timeout of 4seconds
-  setTimeout(function(){
-    socket.emit('testerEvent', { description: 'A custom event named testerEvent!'});
-  }, 4000);
+io.on('connection', function(socket){
+    clients++;
+  io.sockets.emit('broadcast', { description: clients + ' clients connected!'});
   socket.on('disconnect', function () {
-    console.log('A user disconnected');
-  });
-});
-
-io.on('connection', function(socket){
-   socket.on('clientEvent', function(data){
-        console.log(data);
-  });
+               clients--;
+                  io.sockets.emit('broadcast', { description: clients + ' clients connected!'});
+               });
 });
 
 http.listen(3000, function(){
